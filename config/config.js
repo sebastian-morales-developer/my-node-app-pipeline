@@ -1,12 +1,23 @@
-  require('dotenv').config();
+require('dotenv').config();
 
-  module.exports = {
-    development: {
-      username: process.env['DB_USERNAME'], // Ensure this matches your PostgreSQL user
-      password: process.env['DB_PASSWORD'], // Ensure this matches your PostgreSQL password
-      database: process.env['DB_NAME'], // Ensure this matches your PostgreSQL database name
-      host: process.env['DB_HOST'],           // Important: Use the *container name* (not "localhost")
-      port: 5432,                 // PostgreSQL default port
-      dialect: 'postgres',
-    },
-  };
+module.exports = {
+  development: {
+    username: process.env['DB_USERNAME'], // Usuario de la base de datos
+    password: process.env['DB_PASSWORD'], // Contraseña del usuario
+    database: process.env['DB_NAME'],     // Nombre de la base de datos
+    host: process.env['DB_HOST'],         // Nombre del servicio PostgreSQL en Kubernetes
+    port: 5432,                           // Puerto por defecto de PostgreSQL
+    dialect: 'postgres',                  // Motor de la base de datos
+  },
+  production: {
+    username: process.env['DB_USERNAME'],
+    password: process.env['DB_PASSWORD'],
+    database: process.env['DB_NAME'],
+    host: process.env['DB_HOST'],
+    port: 5432,
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: { require: true, rejectUnauthorized: false } // Configuración SSL (ajústalo según tu necesidad)
+    }
+  }
+};
