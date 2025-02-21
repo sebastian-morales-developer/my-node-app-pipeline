@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-node-app
-        image: moraniacr01.azurecr.io/my-node-app:latest
+        image: moraniacr01.azurecr.io/my-node-app:a1a3fc3d0eb48626c701f4ec0ab2fa72a76a5476
         ports:
         - containerPort: 3000
         env:
