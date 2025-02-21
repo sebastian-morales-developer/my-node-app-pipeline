@@ -8,7 +8,7 @@ on:
     branches:
       - main
 
-# ➡️ Permisos para usar el id-token
+# ➡️ Permisos para usar el id-token y acceder al repositorio
 permissions:
   id-token: write
   contents: read
@@ -49,27 +49,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ✅ Autenticación en Azure usando OIDC
       - name: Log in to Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
+          enable-AzPSSession: true
+          environment: 'AzureCloud'
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'v1.31.5'
 
+      # ✅ Obtener credenciales del clúster AKS
       - name: Get AKS credentials
         run: |
           az aks get-credentials --resource-group my-resource-group --name my-aks-cluster --overwrite-existing
 
+      # ✅ Despliegue en AKS
       - name: Deploy to AKS
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
 
+      # ✅ Verificar despliegue
       - name: Verify deployment
         run: |
           kubectl get pods
